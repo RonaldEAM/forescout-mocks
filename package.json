@@ -1,0 +1,14 @@
+{
+  "name": "forescout-mocks",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "express": "^4.19.2",
+    "lodash": "^4.17.21"
+  }
+}
