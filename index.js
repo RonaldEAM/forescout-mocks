@@ -1,15 +1,15 @@
-const { faker } = require('@faker-js/faker');
-const express = require('express');
-const policies = require('./responses/policies');
-const segments = require('./responses/segments');
-const vulns = require('./responses/vulns');
-const segmentNames = require('./responses/segmentNames');
-const { sampleSize } = require('lodash');
+const { faker } = require("@faker-js/faker");
+const express = require("express");
+const policies = require("./responses/policies");
+const segments = require("./responses/segments");
+const vulns = require("./responses/vulns");
+const segmentNames = require("./responses/segmentNames");
+const { sampleSize } = require("lodash");
 const app = express();
 
-const port = process.argv[2] || 8080;
+const port = process.argv[2] || 80;
 
-BigInt.prototype['toJSON'] = function () {
+BigInt.prototype["toJSON"] = function () {
   return this.toString();
 };
 
@@ -21,29 +21,29 @@ for (let i = 1; i <= 600; i++) {
   const ip = faker.internet.ipv4();
   const mac = faker.string.hexadecimal({
     length: 12,
-    casing: 'lower',
-    prefix: '',
+    casing: "lower",
+    prefix: "",
   });
   hosts.set(i, {
     hostId: i,
     ip: ip,
     mac: mac,
-    links: [{ rel: 'self', href: `https://127.0.0.1/api/hosts/${i}` }],
+    links: [{ rel: "self", href: `https://127.0.0.1/api/hosts/${i}` }],
   });
 }
 
 const hostsArray = Array.from(hosts.values());
 
-app.post('/api/login', (req, res) => {
+app.post("/api/login", (req, res) => {
   const { username, password } = req.query;
   if (!username || !password) {
-    res.status(400).json({ error: 'Missing username or password' });
+    res.status(400).json({ error: "Missing username or password" });
     return;
   }
-  res.send('test-token');
+  res.send("test-token");
 });
 
-app.get('/api/hosts', (req, res) => {
+app.get("/api/hosts", (req, res) => {
   const { matchRuleId } = req.query;
   if (matchRuleId) {
     res.json({
@@ -58,7 +58,7 @@ app.get('/api/hosts', (req, res) => {
   });
 });
 
-app.get('/api/hosts/:id', (req, res) => {
+app.get("/api/hosts/:id", (req, res) => {
   const id = parseInt(req.params.id);
   if (hosts.has(id)) {
     const host = hosts.get(id);
@@ -72,31 +72,31 @@ app.get('/api/hosts/:id', (req, res) => {
           prim_classification: {
             timestamp: 1723755663,
             value: faker.helpers.arrayElement([
-              'Information Technology/Computer/Workstation',
-              'Information Technology/Computer/ICS Supervisory/Distributed Control System',
-              'Operational Technology/Facilities/Physical Security/Surveillance/IP Camera',
+              "Information Technology/Computer/Workstation",
+              "Information Technology/Computer/ICS Supervisory/Distributed Control System",
+              "Operational Technology/Facilities/Physical Security/Surveillance/IP Camera",
             ]),
           },
           os_classification: {
             timestamp: 1723755663,
             value: faker.helpers.arrayElement([
-              'Windows/Windows 10/Windows 10 Professional',
-              'Unknown',
-              'Apple/Apple Desktop OS/Apple macOS',
-              'Embedded Firmware/Axis Firmware',
+              "Windows/Windows 10/Windows 10 Professional",
+              "Unknown",
+              "Apple/Apple Desktop OS/Apple macOS",
+              "Embedded Firmware/Axis Firmware",
             ]),
           },
           model_classification: {
             timestamp: 1723755663,
-            value: faker.helpers.arrayElement(['Centum', 'Network Camera']),
+            value: faker.helpers.arrayElement(["Centum", "Network Camera"]),
           },
           manufacturer_classification: {
             timestamp: 1723755663,
             value: faker.helpers.arrayElement([
-              'Dell',
-              'Yokogawa',
-              'Apple',
-              'Axis',
+              "Dell",
+              "Yokogawa",
+              "Apple",
+              "Axis",
             ]),
           },
 
@@ -119,7 +119,7 @@ app.get('/api/hosts/:id', (req, res) => {
           },
           gst_signed_in_stat: {
             timestamp: 1723755663,
-            value: 'na',
+            value: "na",
           },
 
           // vulnerability fields
@@ -133,32 +133,32 @@ app.get('/api/hosts/:id', (req, res) => {
         },
       },
       links: [
-        { rel: 'self', href: `https://127.0.0.1/api/hosts/${host.hostId}` },
+        { rel: "self", href: `https://127.0.0.1/api/hosts/${host.hostId}` },
       ],
     });
   } else {
-    res.status(404).json({ error: 'Not found' });
+    res.status(404).json({ error: "Not found" });
   }
 });
 
-app.post('/fsum/oauth2.0/token', (req, res) => {
+app.post("/fsum/oauth2.0/token", (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
-    res.status(400).json({ error: 'Missing username or password' });
+    res.status(400).json({ error: "Missing username or password" });
     return;
   }
   res.json({
-    access_token: 'test-token',
-    token_type: 'bearer',
+    access_token: "test-token",
+    token_type: "bearer",
     expires_in: 3600,
   });
 });
 
-app.get('/adminapi/segments', (req, res) => {
+app.get("/adminapi/segments", (req, res) => {
   res.json(segments);
 });
 
-app.get('/api/policies', (req, res) => {
+app.get("/api/policies", (req, res) => {
   res.json(policies);
 });
 
